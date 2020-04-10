@@ -91,15 +91,11 @@ int main()
 		CloseHandle(hFile);
 		return 1;
 	}
-	MyReader mr(buff, dwFileSize + 1);
+	MyReader mr;
 
-	while (mr.GetPosition < dwFileSize + 1)
+	for (int i = 0; i < dwFileSize+1; i++)
 	{
-		if (mr.IsMessageReady)
-		{
-			mr.WriteMessage(cout);
-		}
-		mr.ReadPart();
+		mr.Read(buff[i]);
 	}
 
 	CloseHandle(hFile);

@@ -1,35 +1,47 @@
 #pragma once
-#include <cstdint>
 #include <ostream>
+#include <cstdint>
+
+using namespace std;
 
 enum MyReaderState
 {
-	ReadingByte,
-	ReadedSyncByte,
+	ReadingSyncByte,
+	ReadingSecondSyncByte,
 	ReadingLen,
 	ReadingId,
-	ReadingData,
-	ReadingCrcAndCheckingMessage,
-	WritingMessage,
+	ReadingAx,
+	ReadingAy,
+	ReadingAz,
+	ReadingWx,
+	ReadingWy,
+	ReadingWz,
+	ReadingTax,
+	ReadingTay,
+	ReadingTaz,
+	ReadingTwx,
+	ReadingTwy,
+	ReadingTwz,
+	ReadingS,
+	ReadingTimestamp,
+	ReadingStatus,
+	ReadingNumber,
+	ReadingFirstCrc,
+	ReadingSecondCrc,
+	//End
 };
 
 class MyReader
 {
 public:
-	MyReader(uint8_t*, int);
-
-	void ReadPart();
-
-	int GetBuffLength();
-	int GetPosition();
-	bool IsMessageReady();
-	void WriteMessage(ostream& ostr);
+	int GetStatus();
+	void Read(uint8_t bt);
 
 private:
-	uint8_t* buff;
-	int buffLength;
-	int position{ 0 };
-	bool isMessageReady{ false };
+	int counter{ 0 };
+	void WriteMessage(ostream& ostr);
+	MyReaderState status{ ReadingSyncByte };
+	uint8_t messageLength;
 	int32_t Ax;
 	int32_t Ay;
 	int32_t Az;
@@ -46,4 +58,7 @@ private:
 	int16_t Timestamp;
 	int8_t Status;
 	int8_t Number;
+	int16_t CRC;
+	bool ReadInt32(int32_t& i, uint8_t& bt);
+	bool ReadInt16(int16_t& i, uint8_t& bt);
 };
