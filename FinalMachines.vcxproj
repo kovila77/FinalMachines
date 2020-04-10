@@ -139,6 +139,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MyReader.cpp" />
+    <ClCompile Include="NewMain.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="MyReader.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -2,6 +2,7 @@
 #include <tchar.h>
 #include <iostream>
 #include <string>
+#include "MyReader.h"
 //#include <fstream>
 
 using namespace std;
@@ -52,7 +53,7 @@ uint16_t crc16(const uint8_t* buf, int len)
 	return crc;
 }
 
-int main1()
+int main()
 {
 	setlocale(LC_ALL, "Russian");
 
@@ -79,7 +80,7 @@ int main1()
 		return 1;
 	}
 
-	char* buff = new char[dwFileSize + 1];
+	uint8_t* buff = new uint8_t[dwFileSize + 1];
 	ZeroMemory(buff, dwFileSize + 1);
 	//buff[dwFileSize] = '\0';
 
@@ -90,52 +91,15 @@ int main1()
 		CloseHandle(hFile);
 		return 1;
 	}
-	byte* data = (byte*)buff;
+	MyReader mr(buff, dwFileSize + 1);
 
-	int s = 0;
-	int len = 0;
-	int begin;
-	int num;
-	string message;
-	for (int i = 1; i < dwFileSize + 1; i++)
+	while (mr.GetPosition < dwFileSize + 1)
 	{
-		if (s == 1)
+		if (mr.IsMessageReady)
 		{
-			len = (unsigned int)data[i];
-			i++;
-			if (i >= dwFileSize + 1) continue;
-			if ((unsigned int)data[i] == 0x87 && (unsigned int)data[i] != (unsigned int)data[i - 1])
-			{
-				num = 1;
-				i++;
-				begin = i;
-				for (; i < dwFileSize + 1 && i < begin + 6 * 4; i += 4)
-				{
-					message += to_string(num) + ": " + to_string(*((int32_t*)(data + i))) + '\n';
-					num++;
-				}
-				begin = i;
-				for (; i < dwFileSize + 1 && i < begin + 8 * 2; i += 2)
-				{
-					message += to_string(num) + ": " + to_string(*((int16_t*)(data + i))) + '\n';
-					num++;
-				}
-				begin = i;
-				for (; i < dwFileSize + 1 && i < begin + 2; i++)
-				{
-					message += to_string(num) + ": " + to_string(*((uint8_t*)(data + i))) + '\n';
-					num++;
-				}
-				cout << message << endl;
-				message.clear();
-			}
-			s = 0;
+			mr.WriteMessage(cout);
 		}
-		if ((unsigned int)data[i] == (unsigned int)data[i - 1] && (unsigned int)data[i] == 0xAA)
-		{
-			s = 1;
-		}
-		else s = 0;
+		mr.ReadPart();
 	}
 
 	CloseHandle(hFile);
