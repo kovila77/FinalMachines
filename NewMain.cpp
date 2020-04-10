@@ -1,6 +1,7 @@
 #include <Windows.h>
 #include <tchar.h>
 #include <iostream>
+#include <fstream>
 #include <string>
 #include "MyReader.h"
 //#include <fstream>
@@ -71,7 +72,6 @@ int main()
 		std::cout << "fileMappingCreate - CreateFile failed, fname = " << std::endl;
 		return 1;
 	}
-
 	DWORD dwFileSize = GetFileSize(hFile, NULL);
 	if (dwFileSize == INVALID_FILE_SIZE)
 	{
@@ -79,11 +79,8 @@ int main()
 		CloseHandle(hFile);
 		return 1;
 	}
-
 	uint8_t* buff = new uint8_t[dwFileSize + 1];
 	ZeroMemory(buff, dwFileSize + 1);
-	//buff[dwFileSize] = '\0';
-
 	if (!ReadFile(hFile, buff, dwFileSize, NULL, NULL))
 	{
 		std::cout << "ReadFile error" << std::endl;
@@ -91,13 +88,16 @@ int main()
 		CloseHandle(hFile);
 		return 1;
 	}
-	MyReader mr;
+
+	ofstream os("result.txt");
+	MyReader mr(&os);
 
 	for (int i = 0; i < dwFileSize+1; i++)
 	{
 		mr.Read(buff[i]);
 	}
-
+	
+	os.close();
 	CloseHandle(hFile);
 	delete[]buff;
 
