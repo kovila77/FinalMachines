@@ -75,32 +75,12 @@ void MyReader::Read(uint8_t bt)
 		status = ReadingId;
 		break;
 	case ReadingId:
-		status = (bt == 0x87) ? ReadingInt32 : ReadingSyncByte;
+		status = (bt == 0x87) ? ReadingMessage : ReadingSyncByte;
 		buff[counter++] = bt;
-		prevCounter = counter;
 		break;
-	case ReadingInt32:
-		buff[counter] = bt;
-		counter++;
-		if (prevCounter + sizeof(int32_t) * COUNT_INT32 <= counter)
-		{
-			status = ReadingInt16;
-			prevCounter = counter;
-		}
-		break;
-	case ReadingInt16:
-		buff[counter] = bt;
-		counter++;
-		if (prevCounter + sizeof(int16_t) * COUNT_INT16 <= counter)
-		{
-			status = ReadingUInt8;
-			prevCounter = counter;
-		}
-		break;
-	case ReadingUInt8:
-		buff[counter] = bt;
-		counter++;
-		if (prevCounter + sizeof(uint8_t) * COUNT_UINT8 <= counter)
+	case ReadingMessage:
+		buff[counter++] = bt;
+		if (BUFFER_LENGTH <= counter)
 		{
 			status = ReadingFirstCrc;
 			counter = 0;

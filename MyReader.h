@@ -10,9 +10,7 @@ enum MyReaderState
 	ReadingSecondSyncByte,
 	ReadingLen,
 	ReadingId,
-	ReadingInt32,
-	ReadingInt16,
-	ReadingUInt8,
+	ReadingMessage,
 	ReadingFirstCrc,
 	ReadingSecondCrc,
 	//End
@@ -35,7 +33,6 @@ private:
 	const int WIDTH = 7;
 	ostream* ostr;
 	int counter{ 0 };
-	int prevCounter{ 0 };
 	int countOfPackages{ 0 };
 	int countOfBadPackages{ 0 };
 	void WriteMessage();
