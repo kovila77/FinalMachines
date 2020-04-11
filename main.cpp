@@ -52,7 +52,7 @@
 //	return crc;
 //}
 //
-//int main1()
+//int main()
 //{
 //	setlocale(LC_ALL, "Russian");
 //
@@ -103,6 +103,17 @@
 //		{
 //			len = (unsigned int)data[i];
 //			i++;
+//
+//			if ((unsigned int)data[i] == 0x87)
+//			{
+//				if (crc16((uint8_t*)(data + i), 43) == *((uint16_t*)(data + i + 44)))
+//				{
+//					int fa = 123;
+//					fa = 33;
+//				}
+//			}
+//
+//
 //			if (i >= dwFileSize + 1) continue;
 //			if ((unsigned int)data[i] == 0x87 && (unsigned int)data[i] != (unsigned int)data[i - 1])
 //			{
