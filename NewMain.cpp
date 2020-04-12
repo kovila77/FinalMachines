@@ -8,13 +8,13 @@
 
 using namespace std;
 
-const wchar_t* FILE_NAME = _T("data_no_error.bin");
+const wchar_t* FILE_NAME = _T("data_some_error.bin");
 
 
 int main()
 {
 	setlocale(LC_ALL, "Russian");
-	ifstream fin(FILE_NAME, ios::in | ios::binary);
+	ifstream fin(FILE_NAME, ios::binary);
 	if (fin.fail()) return 1;
 	ofstream os("result.txt");
 	MyReader mr(&os);

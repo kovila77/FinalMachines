@@ -75,8 +75,15 @@ void MyReader::Read(uint8_t bt)
 		status = ReadingId;
 		break;
 	case ReadingId:
-		status = (bt == 0x87) ? ReadingMessage : ReadingSyncByte;
-		buff[counter++] = bt;
+		if (bt == 0x87)
+		{
+			buff[counter++] = bt;
+			status = ReadingMessage;
+		}
+		else
+		{
+			status = ReadingSyncByte;
+		}
 		break;
 	case ReadingMessage:
 		buff[counter++] = bt;
@@ -91,7 +98,7 @@ void MyReader::Read(uint8_t bt)
 		status = ReadingSecondCrc;
 		break;
 	case ReadingSecondCrc:
-		CRC = CRC + (bt<<8);
+		CRC = CRC + (bt << 8);
 		//CRC = (CRC << 8) + bt;
 		countOfPackages++;
 		if (crc16(buff, BUFFER_LENGTH) == CRC)
